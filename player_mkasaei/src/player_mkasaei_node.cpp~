@@ -1,0 +1,126 @@
+#include <iostream>
+
+#include <vector>
+#include <boost/shared_ptr.hpp>
+
+using namespace std;
+namespace MohammadTeam
+{
+	class Player
+	{
+	    public:
+
+	    Player( string name)
+	    {
+		 this->name = name;
+		// cout << name <<  endl;       
+	    }
+
+	     string getTeamName()
+		{
+	  		return team;
+		};
+
+	    int setTeamName( string team)
+	    {
+		if (team=="red" || team=="green" || team=="blue")
+		{
+		    this->team = team;
+		    return 1;
+		}
+		else
+		{
+		     cout << "cannot set team name to " << team <<  endl;
+		    return 0;
+		}
+	    }
+
+	    int setTeamName(int team_index = 0 /*default value*/)
+	    {
+		switch (team_index)
+		{
+		    case 0: 
+		        return setTeamName("green"); break;
+		    case 1: 
+		        return setTeamName("green"); break;
+		    case 2: 
+		        return setTeamName("blue");  break;
+		    default: 
+		         cout << "wrong team index given. Cannot set team" <<  endl; break;
+		}
+	    }
+
+	     string name;
+
+	    private:
+	       string team;
+
+	};
+
+	class myPlayer: public Player
+	{
+	    public: 
+
+	    myPlayer( string name,  string team): Player(name)
+	    {
+		setTeamName(team);
+	    }
+	    int varexample;
+	};
+
+
+	class Team
+	{
+	    public: 
+
+	    //Team constructor
+	    Team(vector<string> player_names)
+		{
+			for (size_t i=0;i<player_names.size();++i)
+			{
+  				Player player_temp(player_names[i]);
+				players.push_back(player_temp);
+			}
+		}
+	    void printTeamInfo(void)
+	    {
+		cout << "Team has the following players:" << endl;
+
+		for (size_t i=0; i < players.size(); ++i)
+		    cout << players[i].name << endl;
+	    }
+
+		vector<Player> players;
+	    //string name;
+	    //vector<boost::shared_ptr<Player> > players;
+	};  
+}
+
+int main()
+{
+    // Player player("Mohammad");
+    // player.setTeamName("red");
+    // player.setTeamName(1);
+   /* std::vector<int> as;
+     int myint=10;
+as.push_back(myint);
+*/
+
+std::vector<string> players;
+players.push_back("mohammad");
+players.push_back("hamid");
+players.push_back("abbas");
+
+MohammadTeam::Team(players);
+team.printTeamInfo();
+
+
+
+/*    MohammadPlaye::myPlayer player("Messi","blue");
+
+    cout << player.name << endl;     
+    cout << player.getTeamName() <<  endl;     
+ */
+   
+    return 1;                                                      
+}
