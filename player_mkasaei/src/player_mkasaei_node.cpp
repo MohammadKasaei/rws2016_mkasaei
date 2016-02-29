@@ -88,16 +88,47 @@ namespace MohammadTeam
 	class MyPlayer: public Player
 	{
 	    public: 
+            tf::TransformBroadcaster br;
 
 	    MyPlayer( string name,  string team): Player(name)
 	    {
 		setTeamName(team);
+	    
+	   tf::Transform t;
+            t.setOrigin( tf::Vector3(0.0, 0.0, 0.0) );
+            tf::Quaternion q; q.setRPY(0, 0, 0);
+            t.setRotation(q);
+            br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));
+            		
 	    }
 	    
 	    void move(double displacement, double turn_angle)
 	    {
-		// your code here ...
-	        
+		
+	        double max_d =  1; 
+                displacement = (displacement > max_d ? max_d : displacement);
+
+                double min_d =  -0.1; 
+                displacement = (displacement > min_d ? min_d : displacement);
+
+                double max_t =  (M_PI/60);
+                if (turn_angle > max_t)
+                    turn_angle = max_t;
+                else if (turn_angle < -max_t)
+                    turn_angle = -max_t;
+
+                //Compute the new reference frame
+                tf::Transform t_mov;
+                t_mov.setOrigin( tf::Vector3(displacement , 0, 0.0) );
+                tf::Quaternion q;
+                q.setRPY(0, 0, turn_angle);
+                t_mov.setRotation(q);
+
+                tf::Transform t = getPose();
+                t = t  * t_mov;
+
+                //Send the new transform to ROS
+                br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));   
 	    }
 	    int varexample;
 	};
