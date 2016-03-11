@@ -277,9 +277,12 @@ namespace rws2016_mkasaei
             ros::Duration(0.5).sleep(); //sleep to make sure the time is correct
             tf::Transform t;
             srand((unsigned)time(NULL)); // To start the player in a random location
-            double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
-            double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
-            t.setOrigin( tf::Vector3(X, Y, 0.0) );
+           // double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+           // double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+           double X=-5;
+	   double Y=-5;
+	   
+	    t.setOrigin( tf::Vector3(X, Y, 0.0) );
             tf::Quaternion q; q.setRPY(0, 0, 0);
             t.setRotation(q);
             br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));
