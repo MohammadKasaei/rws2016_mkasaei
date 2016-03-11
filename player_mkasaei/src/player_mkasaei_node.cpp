@@ -84,7 +84,8 @@ namespace rws2016_mkasaei
                 }
                 catch (tf::TransformException& ex){
                     ROS_ERROR("%s",ex.what());
-                    ros::Duration(1.0).sleep();
+                    ros::Duration(0.01).sleep();
+		    return 999;
                 }
 
                 tf::Transform t;
@@ -112,7 +113,8 @@ namespace rws2016_mkasaei
                 }
                 catch (tf::TransformException& ex){
                     ROS_ERROR("%s",ex.what());
-                    ros::Duration(1.0).sleep();
+                    ros::Duration(0.01).sleep();
+		    return 0;
                 }
 
                 tf::Transform t;
@@ -141,14 +143,15 @@ namespace rws2016_mkasaei
              */
             tf::Transform getPose(void)
             {
-                ros::Duration(0.1).sleep(); //To allow the listener to hear messages
+                ros::Duration(0.01).sleep(); //To allow the listener to hear messages
                 tf::StampedTransform st; //The pose of the player
                 try{
                     listener.lookupTransform("/map", name, ros::Time(0), st);
                 }
                 catch (tf::TransformException& ex){
                     ROS_ERROR("%s",ex.what());
-                    ros::Duration(1.0).sleep();
+                    ros::Duration(0.1).sleep();
+		    
                 }
 
                 tf::Transform t;
@@ -331,6 +334,7 @@ namespace rws2016_mkasaei
             string getNameOfClosestPrey(void)
             {
                 double prey_dist = getDistance(*prey_team->players[0]);
+	      
                 string prey_name = prey_team->players[0]->name;
 
                 for (size_t i = 1; i < prey_team->players.size(); ++i)
@@ -338,6 +342,7 @@ namespace rws2016_mkasaei
                     double d = getDistance(*prey_team->players[i]);
 
                     if (d < prey_dist) //A new minimum
+		    //if (*prey_team->players[i] == "pdias") //A new minimum		    
                     {
                         prey_dist = d;
                         prey_name = prey_team->players[i]->name;
