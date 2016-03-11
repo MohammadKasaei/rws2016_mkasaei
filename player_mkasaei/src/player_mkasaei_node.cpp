@@ -286,14 +286,21 @@ namespace rws2016_mkasaei
             hunter_team->printTeamInfo();
             prey_team->printTeamInfo();
 
+	    
+	    struct timeval t1;      
+            gettimeofday(&t1, NULL);
+        srand(t1.tv_usec);
+            double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+            double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+	    
             //Initialize position according to team
             ros::Duration(0.5).sleep(); //sleep to make sure the time is correct
             tf::Transform t;
             srand((unsigned)time(NULL)); // To start the player in a random location
            // double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
            // double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
-           double X=-5;
-	   double Y=-5;
+           //double X=-5;
+	   //double Y=-5;
 	   
 	    t.setOrigin( tf::Vector3(X, Y, 0.0) );
             tf::Quaternion q; q.setRPY(0, 0, 0);
@@ -351,7 +358,7 @@ namespace rws2016_mkasaei
                 {
                     double d = getDistance(*prey_team->players[i]);
 		    
-		    if (d < 0.5)
+		    if (d < 0.65)
                     //if (d < prey_dist) //A new minimum
 		    //if (*prey_team->players[i] == "pdias") //A new minimum		    
                     {
