@@ -77,14 +77,14 @@ namespace rws2016_mkasaei
                 string first_refframe = name;
                 string second_refframe = p.name;
 
-                ros::Duration(0.1).sleep(); //To allow the listener to hear messages
+                 ros::Duration(0.01).sleep(); //To allow the listener to hear messages
                 tf::StampedTransform st; //The pose of the player
                 try{
                     listener.lookupTransform(first_refframe, second_refframe, ros::Time(0), st);
                 }
                 catch (tf::TransformException& ex){
                     ROS_ERROR("%s",ex.what());
-                    ros::Duration(0.01).sleep();
+                    ros::Duration(0.1).sleep();
 		    return 999;
                 }
 
@@ -106,14 +106,14 @@ namespace rws2016_mkasaei
                 string first_refframe = name;
                 string second_refframe = player_name;
 
-                ros::Duration(0.1).sleep(); //To allow the listener to hear messages
-                tf::StampedTransform st; //The pose of the player
+                ros::Duration(0.01).sleep(); //To allow the listener to hear messages
+		tf::StampedTransform st; //The pose of the player
                 try{
                     listener.lookupTransform(first_refframe, second_refframe, ros::Time(0), st);
                 }
                 catch (tf::TransformException& ex){
                     ROS_ERROR("%s",ex.what());
-                    ros::Duration(0.01).sleep();
+                    ros::Duration(0.1).sleep();
 		    return 0;
                 }
 
@@ -150,8 +150,7 @@ namespace rws2016_mkasaei
                 }
                 catch (tf::TransformException& ex){
                     ROS_ERROR("%s",ex.what());
-                    ros::Duration(0.1).sleep();
-		    
+                    ros::Duration(0.1).sleep();		    
                 }
 
                 tf::Transform t;
@@ -256,6 +255,17 @@ namespace rws2016_mkasaei
              * @param name player name
              * @param team team name
              */
+	    
+	~MyPlayer()   
+        {
+            tf::Transform t;
+            t.setOrigin( tf::Vector3(15, 15, 0.0) );
+            tf::Quaternion q; q.setRPY(0, 0, 0);
+            t.setRotation(q);
+            br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));
+            br.sendTransform(tf::StampedTransform(t, ros::Time::now() + ros::Duration(2), "/map", name));
+        }
+        
             MyPlayer(string name, string team): Player(name)
         {
             setTeamName(team);
@@ -340,6 +350,29 @@ namespace rws2016_mkasaei
                 for (size_t i = 1; i < prey_team->players.size(); ++i)
                 {
                     double d = getDistance(*prey_team->players[i]);
+		    
+		    if (d < 0.5)
+                    //if (d < prey_dist) //A new minimum
+		    //if (*prey_team->players[i] == "pdias") //A new minimum		    
+                    {
+                        prey_dist = d;
+                        prey_name = prey_team->players[i]->name;
+			return prey_name;
+                    }
+                }
+
+                return prey_name;
+            }
+
+	    string getNameOfClosestPrey2(void)
+            {
+                double prey_dist = getDistance(*prey_team->players[0]);
+	      
+                string prey_name = prey_team->players[0]->name;
+
+                for (size_t i = 1; i < prey_team->players.size(); ++i)
+                {
+                    double d = getDistance(*prey_team->players[i]);
 
                     if (d < prey_dist) //A new minimum
 		    //if (*prey_team->players[i] == "pdias") //A new minimum		    
@@ -352,30 +385,27 @@ namespace rws2016_mkasaei
                 return prey_name;
             }
 
-
             /**
              * @brief called whenever a /game_move msg is received
              *
              * @param msg the msg with the animal values
              */
+	    //double angle=0;
+	    
             void moveCallback(const rws2016_msgs::GameMove& msg)
             {
                 ROS_INFO("player %s received game_move msg", name.c_str()); 
 
-                //I will encode a very simple hunting behaviour:
-                //
-                //1. Get closest prey name
-                //2. Get angle to closest prey
-                //3. Compute maximum displacement
-                //4. Move maximum displacement towards angle to prey (limited by min, max)
-
                 //Step 1
                 string closest_prey = getNameOfClosestPrey();
+		
+		
                 ROS_INFO("Closest prey is %s", closest_prey.c_str());
 
                 //Step 2
                 double angle = getAngle(closest_prey);
-
+		
+	
                 //Step 3
                 double displacement = msg.cat; //I am a cat, others may choose another animal
 
