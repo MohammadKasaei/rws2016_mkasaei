@@ -367,7 +367,7 @@ namespace rws2016_mkasaei
                 {
                     double d = getDistance(*prey_team->players[i]);
 		    
-		    if (d < 1)
+		    if (d < 0.1)
                     //if (d < prey_dist) //A new minimum
 		    //if (*prey_team->players[i] == "pdias") //A new minimum		    
                     {
