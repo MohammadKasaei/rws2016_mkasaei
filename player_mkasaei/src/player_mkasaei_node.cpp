@@ -77,7 +77,7 @@ namespace rws2016_mkasaei
                 string first_refframe = name;
                 string second_refframe = p.name;
 
-                 ros::Duration(0.01).sleep(); //To allow the listener to hear messages
+                ros::Duration(0.01).sleep(); //To allow the listener to hear messages
                 tf::StampedTransform st; //The pose of the player
                 try{
                     listener.lookupTransform(first_refframe, second_refframe, ros::Time(0), st);
@@ -287,11 +287,17 @@ namespace rws2016_mkasaei
             prey_team->printTeamInfo();
 
 	    
+	    
+	    
+	    
+	    
 	    struct timeval t1;      
             gettimeofday(&t1, NULL);
-        srand(t1.tv_usec);
+             srand(t1.tv_usec);
             double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
             double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+	    
+	    
 	    
             //Initialize position according to team
             ros::Duration(0.5).sleep(); //sleep to make sure the time is correct
