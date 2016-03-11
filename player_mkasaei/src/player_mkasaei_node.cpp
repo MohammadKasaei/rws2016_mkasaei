@@ -350,15 +350,17 @@ namespace rws2016_mkasaei
 
             string getNameOfClosestPrey(void)
             {
-                double prey_dist = getDistance(*prey_team->players[0]);
+                
+	        double prey_dist = getDistance(*prey_team->players[0]);
 	      
                 string prey_name = prey_team->players[0]->name;
 
                 for (size_t i = 1; i < prey_team->players.size(); ++i)
+                //for (size_t i = 0; i < prey_team->players.size(); ++i)
                 {
                     double d = getDistance(*prey_team->players[i]);
 		    
-		    if (d < 0.65)
+		    if (d < 0.75)
                     //if (d < prey_dist) //A new minimum
 		    //if (*prey_team->players[i] == "pdias") //A new minimum		    
                     {
