@@ -395,7 +395,7 @@ int main(int argc, char** argv)
     ros::NodeHandle node;
 
     //Creating an instance of class MyPlayer
-    rws2016_mkasaei::MyPlayer my_player("mkasaei", "red");
+    rws2016_mkasaei::MyPlayer my_player("mkasaei", "blue");
 
     //Infinite loop
     ros::spin();
